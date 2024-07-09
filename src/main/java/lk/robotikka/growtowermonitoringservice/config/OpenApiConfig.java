@@ -29,8 +29,8 @@ public class OpenApiConfig {
                 .components(new Components().addSecuritySchemes(securitySchemeName,
                         new SecurityScheme().name(securitySchemeName).type(SecurityScheme.Type.HTTP).scheme("bearer")
                                 .bearerFormat("JWT")))
-                .info(new Info().title("AIS API SUITE").description("APIs for AIS service").version("1.0")
-                        .license(new License().name("Epic Team").url("https://www.epictechnology.lk/")));
+                .info(new Info().title("GrowTower API SUITE").description("APIs for GrowTower service").version("1.0")
+                        .license(new License().name("Robotikka Team").url("https://www.robotiika.lk/")));
         //.externalDocs(new ExternalDocumentation().description("Test Documentation").url("https://github.com"));
     }
 

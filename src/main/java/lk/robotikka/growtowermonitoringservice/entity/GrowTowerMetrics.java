@@ -10,8 +10,11 @@ import java.time.LocalDateTime;
 @Table(name = "GROW_TOWER_METRICS")
 public class GrowTowerMetrics {
 
-    @Id
+    @EmbeddedId
+    private GrowTowerMetricsPK growTowerMetricsPK;
+
     @ManyToOne
+    @MapsId("deviceId")
     @JoinColumn(name = "device_id", referencedColumnName = "device_id", nullable = false)
     private GrowTowerData device;
 

@@ -1,8 +1,11 @@
 package lk.robotikka.growtowermonitoringservice.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "MOBILE_DEVICE")
 public class MobileDevice {

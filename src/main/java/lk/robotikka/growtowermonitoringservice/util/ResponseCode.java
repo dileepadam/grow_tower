@@ -44,4 +44,9 @@ public class ResponseCode {
 
     public static final String FIRMWARE_UPDATE_FAILED = "17";
 
+    public static final String USER_ALREADY_REGISTERED = "18";
+    public static final String LOGIN_FAIL = "19";
+    public static final String DEVICE_REGISTRATION_FAIL = "20";
+    public static final String NO_DEVICE_FOUND_FOR_USER = "21";
+
 }

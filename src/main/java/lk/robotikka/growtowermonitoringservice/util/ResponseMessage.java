@@ -48,5 +48,13 @@ public class ResponseMessage {
 
     public static final String FIRMWARE_UPDATE_FAILED_MSG = "Firmware update failed";
 
+    public static final String USER_ALREADY_REGISTERED = "val.user.registered";
+    public static final String DEVICE_REGISTRATION_FAIL = "val.device.registration.fail";
+    public static final String USER_REGISTRATION_SUCCESS = "val.user.registration.success";
+    public static final String LOGIN_FAIL = "val.login.fail";
+    public static final String LOGIN_SUCCESS = "val.login.success";
+    public static final String NO_DEVICE_FOUND_FOR_USER = "val.device.no.device.found";
+    public static final String DEVICE_REGISTRATION_SUCCESS = "val.device.registration.success";
+
 
 }

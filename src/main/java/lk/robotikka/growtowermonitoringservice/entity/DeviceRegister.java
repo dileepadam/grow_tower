@@ -10,19 +10,22 @@ import java.time.LocalDateTime;
 @Table(name = "DEVICE_REGISTER")
 public class DeviceRegister {
 
-    @Id
+    @EmbeddedId
+    private DeviceRegisterPK deviceRegisterPK;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @MapsId("userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, insertable = false, updatable = false)
     private UserData user;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "device_id", referencedColumnName = "device_id", nullable = false)
+    @MapsId("deviceId")
+    @JoinColumn(name = "device_id", referencedColumnName = "device_id", nullable = false, insertable = false, updatable = false)
     private GrowTowerData device;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "mob_device_id", referencedColumnName = "mob_device_id", nullable = false)
+    @MapsId("mobDeviceId")
+    @JoinColumn(name = "mob_device_id", referencedColumnName = "mob_device_id", nullable = false, insertable = false, updatable = false)
     private MobileDevice mobileDevice;
 
     @Basic

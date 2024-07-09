@@ -3,9 +3,11 @@ package lk.robotikka.growtowermonitoringservice.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
+import lk.robotikka.growtowermonitoringservice.enums.Status;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "USER_DATA")
@@ -21,7 +23,7 @@ public class UserData {
     private int mobileNo;
 
     @Basic
-    @Column(name = "password", length = 45)
+    @Column(name = "password", length = 255)
     private String password;
 
     @Basic
@@ -30,13 +32,16 @@ public class UserData {
 
     @Basic
     @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;
 
     @Basic
     @Column(name = "last_updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime lastUpdatedDate;
 
     @Basic
     @Column(name = "deleted_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deletedDate;
 }

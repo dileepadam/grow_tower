@@ -16,23 +16,23 @@ public class GrowTowerData {
     private int deviceId;
 
     @Basic
-    @Column(name = "serial_no", nullable = false, unique = true, length = 45)
+    @Column(name = "serial_no", nullable = false, unique = true)
     private String serialNo;
 
     @Basic
-    @Column(name = "device_name", length = 45)
+    @Column(name = "device_name")
     private String deviceName;
 
     @Basic
-    @Column(name = "device_type", length = 10)
+    @Column(name = "device_type")
     private String deviceType;
 
     @Basic
-    @Column(name = "status", length = 10)
+    @Column(name = "status")
     private String status;
 
     @Basic
-    @Column(name = "long")
+    @Column(name = "longi")
     private Float longitude;
 
     @Basic

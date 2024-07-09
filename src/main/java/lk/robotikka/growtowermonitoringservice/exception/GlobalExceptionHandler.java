@@ -1,10 +1,10 @@
 package lk.robotikka.growtowermonitoringservice.exception;
 
-import com.epic.ais.poolcontrolservice.domain.FieldValidationError;
-import com.epic.ais.poolcontrolservice.util.ResponseCode;
-import com.epic.ais.poolcontrolservice.util.ResponseGenerator;
-import com.epic.ais.poolcontrolservice.util.ResponseMessage;
-import com.epic.ais.poolcontrolservice.util.Utility;
+import lk.robotikka.growtowermonitoringservice.domain.FieldValidationError;
+import lk.robotikka.growtowermonitoringservice.util.ResponseCode;
+import lk.robotikka.growtowermonitoringservice.util.ResponseGenerator;
+import lk.robotikka.growtowermonitoringservice.util.ResponseMessage;
+import lk.robotikka.growtowermonitoringservice.util.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
