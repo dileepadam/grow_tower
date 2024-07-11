@@ -20,34 +20,6 @@ public class ResponseMessage {
     public static final String NULL_POINTER_MSG = "val.null.pointer";
 
     public static final String CONNECT_EXCEPTION_MSG = "val.connect.exception";
-
-
-    //System Error Messages
-
-    public static final String EMPTY_LANGUAGE_LIST_MSG = "val.empty.language.list";
-
-    public static final String DEVICE_REGISTRATION_SUCCESS_MSG = "val.device.registration.success";
-
-    public static final String DEVICE_ALREADY_REGISTERED_MSG = "val.device.already.registered";
-
-    public static final String SUCCESS_MSG = "val.request.successful";
-
-    public static final String INVALID_REQUEST_DATA_MSG = "val.invalid.request.data";
-
-    public static final String EMPTY_POOL_LIST_MSG = "val.empty.pool.list";
-
-    public static final String EMPTY_POOL_METRICS_MSG = "val.pool.metrics.not.exist";
-
-    public static final String EMPTY_MODE_SETTINGS_MSG = "val.empty.mode.settings";
-
-    public static final String FIRMWARE_VERSION_ALREADY_REGISTERED_MSG = "val.firmware.version.already.registered";
-
-    public static final String FIRMWARE_REGISTRATION_SUCCESS_MSG = "val.firmware.registration.success";
-
-    public static final String NO_FIRMWARE_UPDATE_AVAILABLE_MSG = "val.no.firmware.update.available";
-
-    public static final String FIRMWARE_UPDATE_FAILED_MSG = "Firmware update failed";
-
     public static final String USER_ALREADY_REGISTERED = "val.user.registered";
     public static final String DEVICE_REGISTRATION_FAIL = "val.device.registration.fail";
     public static final String USER_REGISTRATION_SUCCESS = "val.user.registration.success";
@@ -55,6 +27,9 @@ public class ResponseMessage {
     public static final String LOGIN_SUCCESS = "val.login.success";
     public static final String NO_DEVICE_FOUND_FOR_USER = "val.device.no.device.found";
     public static final String DEVICE_REGISTRATION_SUCCESS = "val.device.registration.success";
+
+    public static final String GET_GROW_TOWER_DATA_FAIL = "val.device.register.invalid";
+    public static final String NO_METRIC_FOUND = "val.metrics.notfound";
 
 
 }

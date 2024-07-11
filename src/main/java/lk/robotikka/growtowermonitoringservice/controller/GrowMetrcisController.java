@@ -5,10 +5,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lk.robotikka.growtowermonitoringservice.domain.request.DeviceRegisterRequest;
 import lk.robotikka.growtowermonitoringservice.domain.Response;
+import lk.robotikka.growtowermonitoringservice.domain.request.DeviceRegisterRequest;
+import lk.robotikka.growtowermonitoringservice.domain.request.GetGrowTowerDataRequest;
 import lk.robotikka.growtowermonitoringservice.dto.DeviceRegisterRequestDTO;
-import lk.robotikka.growtowermonitoringservice.service.GrowTowerService;
+import lk.robotikka.growtowermonitoringservice.dto.GetGrowTowerDataRequestDTO;
+import lk.robotikka.growtowermonitoringservice.service.GrowTowerMetricsService;
 import lk.robotikka.growtowermonitoringservice.util.EndPoint;
 import lk.robotikka.growtowermonitoringservice.util.Utility;
 import lk.robotikka.growtowermonitoringservice.validator.group.OrderedCheck;
@@ -24,30 +26,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/api/v1/device")
+@RequestMapping("/api/v1/metrics")
 @CrossOrigin
 @Validated
-public class DeviceController {
+public class GrowMetrcisController {
+    private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+
     @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
-    private GrowTowerService growTowerService;
+    private GrowTowerMetricsService growTowerMetricsService;
 
-    private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
-    @PostMapping(value = EndPoint.DEVICE_REGISTER, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Grow Tower Register", description = "Register Device to the system.")
+    @PostMapping(value = EndPoint.GET_GROW_TOWER_METRICS, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get Grow Tower Metrics", description = "Api get grow tower metrics")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully Registered", content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "200", description = "Get Grow Tower Data Successful", content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<Object> login(
-            @Validated(OrderedCheck.class) @RequestBody DeviceRegisterRequestDTO deviceRegisterRequestDTO, Locale locale)
+            @Validated(OrderedCheck.class) @RequestBody GetGrowTowerDataRequestDTO getGrowTowerDataRequestDTO, Locale locale)
             throws Exception {
-        logger.debug("Received Grow Tower Register Request - {} ", Utility.objectToJson(deviceRegisterRequestDTO));
-        return growTowerService.registerDevice(modelMapper.map(deviceRegisterRequestDTO, DeviceRegisterRequest.class), locale);
+        logger.debug("Received Login Request - {} ", Utility.objectToJson(getGrowTowerDataRequestDTO));
+        return growTowerMetricsService.getDeviceData(modelMapper.map(getGrowTowerDataRequestDTO, GetGrowTowerDataRequest.class), locale);
 
     }
 }

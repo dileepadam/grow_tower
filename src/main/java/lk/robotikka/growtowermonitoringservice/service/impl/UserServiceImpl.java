@@ -1,5 +1,6 @@
 package lk.robotikka.growtowermonitoringservice.service.impl;
 
+import lk.robotikka.growtowermonitoringservice.domain.DeviceData;
 import lk.robotikka.growtowermonitoringservice.domain.request.LoginRequest;
 import lk.robotikka.growtowermonitoringservice.domain.request.UserRegisterRequest;
 import lk.robotikka.growtowermonitoringservice.domain.response.LoginResponse;
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
             return responseGenerator.generateResponse(ResponseCode.NO_DEVICE_FOUND_FOR_USER, ResponseMessage.NO_DEVICE_FOUND_FOR_USER, new Object[]{}, locale);
         }
 
-        ArrayList<String> serialNumbers = new ArrayList<>();
+        ArrayList<DeviceData> serialNumbers = new ArrayList<>();
         registeredDevices.forEach(deviceRegister -> {
             DeviceRegister newDeviceRegister = new DeviceRegister();
             newDeviceRegister.setUser(deviceRegister.getUser());
@@ -122,7 +123,7 @@ public class UserServiceImpl implements UserService {
             newDeviceRegister.setMobileDevice(mobileDevice);
             deviceRegisterRepository.save(newDeviceRegister);
 
-            serialNumbers.add(newDeviceRegister.getDevice().getSerialNo());
+            serialNumbers.add(new DeviceData(newDeviceRegister.getDevice().getSerialNo(), newDeviceRegister.getDevice().getDeviceId()));
         });
 
         LoginResponse response = new LoginResponse(serialNumbers);

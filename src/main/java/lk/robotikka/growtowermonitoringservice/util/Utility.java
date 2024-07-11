@@ -20,6 +20,10 @@ public class Utility {
         return new Gson().toJson(object);
     }
 
+    public static <T> T jsonToObject(String json, Class<T> clazz) {
+        return new Gson().fromJson(json, clazz);
+    }
+
     public static LocalDateTime getSystemDate() {
         return LocalDateTime.now();
     }
