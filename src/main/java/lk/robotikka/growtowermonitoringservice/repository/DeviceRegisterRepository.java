@@ -15,4 +15,7 @@ public interface DeviceRegisterRepository extends JpaRepository<DeviceRegister, 
     List<DeviceRegister> findByUserMobileNo(@Param("mobileNo") int mobileNo);
 
     DeviceRegister findByUserAndDeviceAndMobileDevice(UserData suer, GrowTowerData device, MobileDevice mobileDevice);
+
+    @Query("SELECT dr.mobileDevice FROM DeviceRegister dr WHERE dr.device.serialNo = :serialNo")
+    List<MobileDevice> findAllRegisteredMobileDevicesByGrowTowerSerialNo(@Param("serialNo") String serialNo);
 }

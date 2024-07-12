@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface GrowTowerDataRepository extends JpaRepository<GrowTowerData, Integer> {
     Optional<GrowTowerData> findBySerialNo(String serialNo);
+
 }

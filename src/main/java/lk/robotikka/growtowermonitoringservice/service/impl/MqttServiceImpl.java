@@ -1,13 +1,10 @@
 package lk.robotikka.growtowermonitoringservice.service.impl;
 
 import lk.robotikka.growtowermonitoringservice.domain.mqtt.GrowTowerMetricsMqtt;
-import lk.robotikka.growtowermonitoringservice.entity.GrowTowerData;
-import lk.robotikka.growtowermonitoringservice.entity.GrowTowerMetrics;
-import lk.robotikka.growtowermonitoringservice.entity.GrowTowerMetricsHistory;
-import lk.robotikka.growtowermonitoringservice.entity.GrowTowerMetricsPK;
-import lk.robotikka.growtowermonitoringservice.repository.GrowTowerDataRepository;
-import lk.robotikka.growtowermonitoringservice.repository.GrowTowerMetricsHistoryRepository;
-import lk.robotikka.growtowermonitoringservice.repository.GrowTowerMetricsRepository;
+import lk.robotikka.growtowermonitoringservice.domain.request.NotificationRequest;
+import lk.robotikka.growtowermonitoringservice.entity.*;
+import lk.robotikka.growtowermonitoringservice.enums.AlertType;
+import lk.robotikka.growtowermonitoringservice.repository.*;
 import lk.robotikka.growtowermonitoringservice.service.MqttService;
 import lk.robotikka.growtowermonitoringservice.util.Utility;
 import org.slf4j.Logger;
@@ -16,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class MqttServiceImpl implements MqttService {
@@ -32,6 +31,15 @@ public class MqttServiceImpl implements MqttService {
     @Autowired
     private GrowTowerMetricsHistoryRepository growTowerMetricsHistoryRepository;
 
+    @Autowired
+    private DeviceRegisterRepository deviceRegisterRepository;
+
+    @Autowired
+    private CommonConfigRepository commonConfigRepository;
+
+    @Autowired
+    private FCMService fcmService;
+
     @Override
     @Transactional
     public void getGrowTowerMetrics(String growTowerMetrics) throws Exception {
@@ -40,16 +48,15 @@ public class MqttServiceImpl implements MqttService {
 
         if (growTowerDataOpt.isPresent()) {
             GrowTowerData growTowerData = growTowerDataOpt.get();
-            Optional<GrowTowerMetrics> metricsOpt = growTowerMetricsRepository.findByDevice(growTowerData);
-
-            if (metricsOpt.isPresent()) {
-                updateGrowTowerMetrics(metricsOpt.get(), metricsMqtt);
-            } else {
-                addGrowTowerMetrics(growTowerData, metricsMqtt);
-            }
+            growTowerMetricsRepository.findByDevice(growTowerData)
+                    .ifPresentOrElse(
+                            metrics -> updateGrowTowerMetrics(metrics, metricsMqtt),
+                            () -> addGrowTowerMetrics(growTowerData, metricsMqtt)
+                    );
 
             saveMetricsHistory(growTowerData, metricsMqtt);
             logger.info("Grow Tower Metrics processed successfully.");
+            setErrorMessage(metricsMqtt, growTowerData.getSerialNo());
         } else {
             logger.error("Unauthorized device found.");
         }
@@ -116,5 +123,66 @@ public class MqttServiceImpl implements MqttService {
             logger.error("Failed to save Grow Tower Metrics History.", e);
             throw new RuntimeException("Grow Tower Metrics History Update Fail", e);
         }
+    }
+
+    protected void sendPushNotification(String serialNo, String body, String topic, String title) {
+        List<MobileDevice> mobileDevices = deviceRegisterRepository.findAllRegisteredMobileDevicesByGrowTowerSerialNo(serialNo);
+
+        NotificationRequest notificationRequest = new NotificationRequest();
+        notificationRequest.setBody(body);
+        notificationRequest.setTitle(title);
+        notificationRequest.setTopic(topic);
+
+        for (MobileDevice mobileDevice : mobileDevices) {
+            notificationRequest.setToken(mobileDevice.getPushId());
+            try {
+                fcmService.sendMessageToToken(notificationRequest);
+            } catch (InterruptedException | ExecutionException e) {
+                logger.info("Push Notification Sending Failed");
+                throw new RuntimeException("Push Notification Sending Failed", e);
+            }
+        }
+    }
+
+    protected AlertType checkIsError(GrowTowerMetricsMqtt metricsMqtt) {
+        return commonConfigRepository.findById(1)
+                .map(commonConfig -> {
+                    if (commonConfig.getMinWaterTemp() >= metricsMqtt.getWaterTemp()) {
+                        return AlertType.MIN_WATER_LVL;
+                    } else if (commonConfig.getMaxWaterLvl() <= metricsMqtt.getWaterLvl()) {
+                        return AlertType.MAX_WATER_LVL;
+                    } else if (commonConfig.getMinWaterLvl() >= metricsMqtt.getWaterLvl()) {
+                        return AlertType.MIN_TEMP;
+                    } else if (commonConfig.getMaxWaterTemp() <= metricsMqtt.getWaterTemp()) {
+                        return AlertType.MAX_TEMP;
+                    } else {
+                        return AlertType.NO_ERROR;
+                    }
+                })
+                .orElse(AlertType.NO_ERROR);
+    }
+
+    protected void setErrorMessage(GrowTowerMetricsMqtt growTowerMetricsMqtt, String serialNo) {
+        AlertType alertType = checkIsError(growTowerMetricsMqtt);
+        String body;
+        switch (alertType) {
+            case MAX_TEMP:
+                body = "Max Water Temperature Exceeded";
+                break;
+            case MIN_TEMP:
+                body = "Min Water Temperature Exceeded";
+                break;
+            case MAX_WATER_LVL:
+                body = "Max Water Level Exceeded";
+                break;
+            case MIN_WATER_LVL:
+                body = "Min Water Level Exceeded";
+                break;
+            case NO_ERROR:
+            default:
+                body = "No Error Found";
+                break;
+        }
+        sendPushNotification(serialNo, body, body, "Alert");
     }
 }
