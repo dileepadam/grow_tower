@@ -138,8 +138,8 @@ public class MqttServiceImpl implements MqttService {
             try {
                 fcmService.sendMessageToToken(notificationRequest);
             } catch (InterruptedException | ExecutionException e) {
-                logger.info("Push Notification Sending Failed");
-                throw new RuntimeException("Push Notification Sending Failed", e);
+                logger.error("Push Notification Sending Failed " + e.getMessage());
+//                throw new RuntimeException("Push Notification Sending Failed", e);
             }
         }
     }
